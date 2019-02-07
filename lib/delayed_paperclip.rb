@@ -101,7 +101,9 @@ module DelayedPaperclip
     end
 
     def enqueue_post_processing_for name
-      DelayedPaperclip.enqueue(self.class.name, read_attribute(:id), name.to_sym)
+      unless self.call(name).delayed_only_process.empty?
+        DelayedPaperclip.enqueue(self.class.name, read_attribute(:id), name.to_sym)
+      end
     end
 
     def prepare_enqueueing_for name
